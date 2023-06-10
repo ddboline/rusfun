@@ -132,7 +132,7 @@ pub fn fit(
         fitted_model: array1_to_vec(minimizer.minimizer_ymodel),
         chi2: minimizer.chi2,
         redchi2: minimizer.redchi2,
-        R2: R2,
+        R2,
         convergence_message: String::from(minimizer.convergence_message),
     }
 }

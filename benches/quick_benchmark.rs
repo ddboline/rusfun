@@ -38,9 +38,9 @@ fn calc_with_array1() -> f64 {
 // }
 
 fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("calc with array", |b| b.iter(|| calc_with_array()));
-    c.bench_function("calc with vec", |b| b.iter(|| calc_with_vec()));
-    c.bench_function("calc with array1", |b| b.iter(|| calc_with_array1()));
+    c.bench_function("calc with array", |b| b.iter(calc_with_array));
+    c.bench_function("calc with vec", |b| b.iter(calc_with_vec));
+    c.bench_function("calc with array1", |b| b.iter(calc_with_array1));
     // c.bench_function("calc with rulinalg vector", |b| b.iter(|| calc_with_rulinalgvector()));
 }
 

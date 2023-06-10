@@ -25,14 +25,13 @@ where
     let (L, U, P) = LU_decomp(A);
     // first solve Ly = Pb
     let pivotized_b = P.dot(b);
-    let mut y: Array1<T> = pivotized_b.clone();
+    let mut y: Array1<T> = pivotized_b;
     for i in 1..matrix_dimension {
         y[i] = y[i] - L.slice(s![i, 0..i]).dot(&y.slice(s![0..i]));
     }
     // then solve Ux = y
     let mut x: Array1<T> = y.clone();
-    x[matrix_dimension - 1] =
-        x[matrix_dimension - 1] / U[[matrix_dimension - 1, matrix_dimension - 1]];
+    x[matrix_dimension - 1] /= U[[matrix_dimension - 1, matrix_dimension - 1]];
     for i in (0..matrix_dimension - 1).rev() {
         x[i] = (x[i]
             - U.slice(s![i, i + 1..matrix_dimension])
@@ -50,14 +49,13 @@ where
     let matrix_dimension = L.nrows();
     // first solve Ly = Pb
     let pivotized_b = P.dot(b);
-    let mut y: Array1<T> = pivotized_b.clone();
+    let mut y: Array1<T> = pivotized_b;
     for i in 1..matrix_dimension {
         y[i] = y[i] - L.slice(s![i, 0..i]).dot(&y.slice(s![0..i]));
     }
     // then solve Ux = y
     let mut x: Array1<T> = y.clone();
-    x[matrix_dimension - 1] =
-        x[matrix_dimension - 1] / U[[matrix_dimension - 1, matrix_dimension - 1]];
+    x[matrix_dimension - 1] /= U[[matrix_dimension - 1, matrix_dimension - 1]];
     for i in (0..matrix_dimension - 1).rev() {
         x[i] = (x[i]
             - U.slice(s![i, i + 1..matrix_dimension])
@@ -80,7 +78,7 @@ where
         A.ncols(),
         "Tried LU decomposition with a non-square matrix."
     );
-    let P = pivot(&A);
+    let P = pivot(A);
     let pivotized_A = P.dot(A);
 
     let mut L: Array2<T> = Array::eye(matrix_dimension);

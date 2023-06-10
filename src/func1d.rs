@@ -15,20 +15,20 @@ impl<'a> Func1D<'a> {
         function: fn(&Array1<f64>, &Array1<f64>) -> Array1<f64>,
     ) -> Func1D<'a> {
         Func1D {
-            parameters: &parameters,
-            domain: &domain,
+            parameters,
+            domain,
             function,
         }
     }
 
     /// Performs calculation of f(p, x) using the initial parameters p
     pub fn output(&self) -> Array1<f64> {
-        (self.function)(&self.parameters, &self.domain)
+        (self.function)(self.parameters, self.domain)
     }
 
     /// Performs calculation of f(p, x) using the given set of parameters
     pub fn for_parameters(&self, parameters: &Array1<f64>) -> Array1<f64> {
-        (self.function)(&parameters, &self.domain)
+        (self.function)(parameters, self.domain)
     }
 
     /// Calculates the gradient of the function with respect to its parameters

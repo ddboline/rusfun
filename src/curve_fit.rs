@@ -74,22 +74,22 @@ impl<'a> Minimizer<'a> {
             .fold(0, |sum, val| if *val { sum + 1 } else { sum });
         let num_params = initial_parameters.len();
         let num_data = model.domain.len();
-        let chi2 = chi2(&y, &minimizer_ymodel, &sy);
+        let chi2 = chi2(y, &minimizer_ymodel, sy);
         let dof = num_data - num_varying_params;
         let redchi2 = chi2 / (dof as f64);
 
         // initialize jacobian
         // J is the parameter gradient of f at the current values
-        let j = model.parameter_gradient(&initial_parameters, &vary_parameter, &minimizer_ymodel);
+        let j = model.parameter_gradient(&initial_parameters, vary_parameter, &minimizer_ymodel);
 
         // W = 1 / sy^2, only diagonal is considered
         let weighting_matrix: Array1<f64> = sy.map(|x| 1.0 / x.powi(2));
 
         Minimizer {
-            model: &model,
-            y: &y,
-            sy: &sy,
-            vary_parameter: &vary_parameter,
+            model,
+            y,
+            sy,
+            vary_parameter,
             weighting_matrix,
             minimizer_parameters: initial_parameters,
             minimizer_ymodel,
@@ -99,12 +99,12 @@ impl<'a> Minimizer<'a> {
             lambda,
             num_func_evaluation: 0,
             max_iterations: 10 * num_varying_params,
-            num_data: num_data,
-            num_varying_params: num_varying_params,
-            num_params: num_params,
-            chi2: chi2,
-            dof: dof,
-            redchi2: redchi2,
+            num_data,
+            num_varying_params,
+            num_params,
+            chi2,
+            dof,
+            redchi2,
             convergence_message: "",
             epsilon1: 1e-3,
             epsilon2: 1e-3,
@@ -182,19 +182,19 @@ impl<'a> Minimizer<'a> {
         let updated_parameters = &self.minimizer_parameters + &delta_all;
 
         let updated_model = self.model.for_parameters(&updated_parameters);
-        let updated_chi2 = chi2(&self.y, &updated_model, &self.sy);
+        let updated_chi2 = chi2(self.y, &updated_model, self.sy);
         let redchi2 = updated_chi2 / (self.dof as f64);
 
         MinimizationStep {
             parameters: updated_parameters,
-            delta: delta,
+            delta,
             ymodel: updated_model,
             chi2: updated_chi2,
-            redchi2: redchi2,
-            metric: metric,
-            metric_gradient: metric_gradient,
-            metric_parameters: metric_parameters,
-            JT_W_J: JT_W_J,
+            redchi2,
+            metric,
+            metric_gradient,
+            metric_parameters,
+            JT_W_J,
         }
     }
 
@@ -222,7 +222,7 @@ impl<'a> Minimizer<'a> {
                     // requires #params function evaluations
                     self.jacobian = self.model.parameter_gradient(
                         &self.minimizer_parameters,
-                        &self.vary_parameter,
+                        self.vary_parameter,
                         &self.minimizer_ymodel,
                     );
                     self.num_func_evaluation += self.num_varying_params;
@@ -281,7 +281,7 @@ impl<'a> Minimizer<'a> {
                 // step is rejected, update jacobian by explicit calculation
                 self.jacobian = self.model.parameter_gradient(
                     &self.minimizer_parameters,
-                    &self.vary_parameter,
+                    self.vary_parameter,
                     &self.minimizer_ymodel,
                 );
             }

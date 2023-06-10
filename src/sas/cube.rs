@@ -3,7 +3,7 @@ use ndarray::Array1;
 
 const PI_2: f64 = 1.5707963267948966;
 const SQ_2: f64 = 1.4142135623730951;
-const FRAC_SQ_PI: f64 = 0.56418958354775628;
+const FRAC_SQ_PI: f64 = 0.564_189_583_547_756_3;
 
 /// Formfactor Amplitude F of a Cube Particle
 ///
@@ -26,7 +26,7 @@ fn sinc(x: f64) -> f64 {
 /// Integrate in spherical coordinates over all possible angles. Cube symmetry
 /// reduces the integral to the range 0..pi/2
 fn orientation_averaged_formfactor(q: f64, a: f64, gl_quad: &GaussLegendre) -> f64 {
-    gl_quad.integrate(0.0, PI_2, |theta| theta_integral(q, a, theta, &gl_quad))
+    gl_quad.integrate(0.0, PI_2, |theta| theta_integral(q, a, theta, gl_quad))
 }
 
 /// Inner integral of orientation integral
@@ -58,7 +58,7 @@ fn size_distributed_formfactor(
     gl_quad: &GaussLegendre,
 ) -> f64 {
     let integral = gh_quad.integrate(|a_value| {
-        orientation_averaged_formfactor(q, a * (SQ_2 * a_value * sigA).exp(), &gl_quad)
+        orientation_averaged_formfactor(q, a * (SQ_2 * a_value * sigA).exp(), gl_quad)
     });
     integral * FRAC_SQ_PI
 }

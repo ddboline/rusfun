@@ -1,9 +1,9 @@
 use gauss_quad::GaussHermite;
 use ndarray::Array1;
 
-const PI: f64 = 3.1415926535897931;
+const PI: f64 = 3.141_592_653_589_793;
 const SQ_2: f64 = 1.4142135623730951;
-const FRAC_SQ_PI: f64 = 0.56418958354775628;
+const FRAC_SQ_PI: f64 = 0.564_189_583_547_756_3;
 
 /// Formfactor Amplitude F of a Spherical Particle
 ///
