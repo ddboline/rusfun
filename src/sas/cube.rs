@@ -1,8 +1,8 @@
 use gauss_quad::{GaussHermite, GaussLegendre};
 use ndarray::Array1;
 
-const PI_2: f64 = 1.5707963267948966;
-const SQ_2: f64 = 1.4142135623730951;
+const PI_2: f64 = std::f64::consts::FRAC_PI_2;
+const SQ_2: f64 = std::f64::consts::SQRT_2;
 const FRAC_SQ_PI: f64 = 0.564_189_583_547_756_3;
 
 /// Formfactor Amplitude F of a Cube Particle
@@ -77,13 +77,12 @@ pub fn formfactor(p: &Array1<f64>, q: &Array1<f64>) -> Array1<f64> {
     let gl_deg = p[5] as usize;
     let gh_deg = p[6] as usize;
 
-    let I: Array1<f64>;
     let gl_quad = GaussLegendre::init(gl_deg);
-    if sigA > 0.0 && gh_deg > 1 {
+    let I: Array1<f64> = if sigA > 0.0 && gh_deg > 1 {
         let gh_quad = GaussHermite::init(gh_deg);
-        I = q.map(|qval| size_distributed_formfactor(*qval, a, sigA, &gh_quad, &gl_quad));
+        q.map(|qval| size_distributed_formfactor(*qval, a, sigA, &gh_quad, &gl_quad))
     } else {
-        I = q.map(|qval| orientation_averaged_formfactor(*qval, a, &gl_quad));
-    }
+        q.map(|qval| orientation_averaged_formfactor(*qval, a, &gl_quad))
+    };
     I0 * (SLDcube - SLDmatrix).powi(2) * I
 }

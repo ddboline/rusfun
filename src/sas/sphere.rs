@@ -1,8 +1,8 @@
 use gauss_quad::GaussHermite;
 use ndarray::Array1;
 
-const PI: f64 = 3.141_592_653_589_793;
-const SQ_2: f64 = 1.4142135623730951;
+const PI: f64 = std::f64::consts::PI;
+const SQ_2: f64 = std::f64::consts::SQRT_2;
 const FRAC_SQ_PI: f64 = 0.564_189_583_547_756_3;
 
 /// Formfactor Amplitude F of a Spherical Particle
@@ -40,12 +40,11 @@ pub fn formfactor(p: &Array1<f64>, q: &Array1<f64>) -> Array1<f64> {
     let SLDmatrix = p[4];
     let deg = p[5] as usize;
 
-    let I: Array1<f64>;
-    if sigR > 0.0 && deg > 1 {
+    let I: Array1<f64> = if sigR > 0.0 && deg > 1 {
         let quad = GaussHermite::init(deg);
-        I = q.map(|qval| size_distributed_formfactor(*qval, R, sigR, &quad));
+        q.map(|qval| size_distributed_formfactor(*qval, R, sigR, &quad))
     } else {
-        I = q.map(|qval| amplitude(*qval, R).powi(2));
-    }
+        q.map(|qval| amplitude(*qval, R).powi(2))
+    };
     I0 * (SLDsphere - SLDmatrix).powi(2) * I
 }

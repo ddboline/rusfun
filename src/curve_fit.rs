@@ -170,14 +170,14 @@ impl<'a> Minimizer<'a> {
             .to_vec()
             .iter()
             .cloned()
-            .fold(0. / 0., f64::max);
+            .fold(f64::NAN, f64::max);
 
         let metric_parameters = (&delta_all / &self.minimizer_parameters)
             .map(|x| x.abs())
             .to_vec()
             .iter()
             .cloned()
-            .fold(0. / 0., f64::max);
+            .fold(f64::NAN, f64::max);
 
         let updated_parameters = &self.minimizer_parameters + &delta_all;
 
