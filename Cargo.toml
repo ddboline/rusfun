@@ -13,9 +13,9 @@ license = "MIT"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
-ndarray = "0.16"
+ndarray = "0.17"
 gauss-quad = {git = "https://github.com/ddboline/gauss-quad.git"}
-criterion = "0.5"
+criterion = "0.8"
 
 [[bench]]
 name = "quick_benchmark"
